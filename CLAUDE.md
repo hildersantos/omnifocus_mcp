@@ -60,7 +60,25 @@ npm run lint
 - **Use Omni Automation API**: All OmniFocus integration MUST use the official Omni Automation API as documented at https://omni-automation.com/omnifocus/OF-API.html
 - **Avoid AppleScript**: Do NOT use AppleScript for OmniFocus integration as it lacks cross-platform support
 - **Cross-Platform Compatibility**: The Omni Automation API works on macOS, iOS, and iPadOS, making it the preferred integration method for future-proof compatibility
-- **JavaScript Bridge**: Implement a bridge between TypeScript and the Omni Automation JavaScript API
+- **URL Scheme Integration**: Use the omnifocus:// URL scheme with omnijs-run parameter to execute scripts in OmniFocus
+- **Security Considerations**: Be aware of OmniFocus security measures for external script execution
+- **JavaScript Bridge**: Implement a bridge between TypeScript/Node.js and the Omni Automation JavaScript API
+- **Mock Implementation**: For development and testing, use mock implementations before integrating with the actual OmniFocus application
+
+### Integration Approaches
+
+1. **URL Scheme Method**:
+   - Use `omnifocus://localhost/omnijs-run?script=encodedScript` to execute JavaScript within OmniFocus
+   - Pass additional data using the `&arg=encodedArgument` parameter
+   - Execute URL using Node.js `child_process.exec` with the macOS `open` command
+
+2. **NPM Packages**:
+   - Consider using existing packages like `omnifocus` for basic integration
+   - For advanced needs, create custom integration using URL schemes or JXA
+
+3. **Data Operations**:
+   - Use TaskPaper format with `Task.byParsingTransportText` for batch operations
+   - Be aware of limitations in CRUD operations via external scripts
 
 ## Resources
 
