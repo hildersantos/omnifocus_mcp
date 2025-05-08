@@ -55,7 +55,15 @@ npm run lint
 - Write commit messages in English
 - Never add Claude as a co-author in commits
 
+## OmniFocus Integration Guidelines
+
+- **Use Omni Automation API**: All OmniFocus integration MUST use the official Omni Automation API as documented at https://omni-automation.com/omnifocus/OF-API.html
+- **Avoid AppleScript**: Do NOT use AppleScript for OmniFocus integration as it lacks cross-platform support
+- **Cross-Platform Compatibility**: The Omni Automation API works on macOS, iOS, and iPadOS, making it the preferred integration method for future-proof compatibility
+- **JavaScript Bridge**: Implement a bridge between TypeScript and the Omni Automation JavaScript API
+
 ## Resources
 
 - MCP SDK Documentation: https://www.npmjs.com/package/@modelcontextprotocol/sdk
 - MCP Tutorial: https://dev.to/shadid12/how-to-build-mcp-servers-with-typescript-sdk-1c28
+- OmniFocus Automation API: https://omni-automation.com/omnifocus/OF-API.html
