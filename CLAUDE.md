@@ -11,6 +11,8 @@ This is an MCP (Model Context Protocol) server for OmniFocus integration built w
 - **TDD (Test-Driven Development)**: Write tests before implementing functionality
 - **KISS (Keep It Simple, Stupid)**: Favor simple solutions over complex ones
 - **Incremental Development**: Build features step by step
+- After each implementation, run all the tests and ensure that the app is building successfully
+- After finishing the implementation and ensure that everything is working, ask to the user if he wants to merge the branch on main
 
 ## Common Commands
 
