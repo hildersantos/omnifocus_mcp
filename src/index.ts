@@ -6,6 +6,8 @@
 
 import { createLogger } from './utils/logger';
 import { getConfig } from './utils/config';
+import { createMcpServer } from './handlers/mcpServer';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 
 const config = getConfig();
 const logger = createLogger('app');
@@ -18,7 +20,17 @@ logger.debug('Configuration:', config);
  */
 async function main() {
   try {
-    logger.info(`Server initialized on port ${config.port}`);
+    // Create MCP server
+    const server = createMcpServer();
+    
+    // Create transport layer for communication
+    const transport = new StdioServerTransport();
+    
+    // Connect the server to the transport
+    logger.info('Connecting MCP server to transport');
+    await server.connect(transport);
+    
+    logger.info('MCP server running');
   } catch (error) {
     logger.error('Failed to start server:', error instanceof Error ? error.message : String(error));
     process.exit(1);
