@@ -8,6 +8,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { createLogger } from '../utils/logger';
 import { OmniFocusService } from '../services/omnifocus';
+import { OmniFocusBridge } from '../services/omnifocusBridge';
 
 const logger = createLogger('mcpServer');
 
@@ -25,8 +26,12 @@ export function createMcpServer(): McpServer {
     version: '1.0.0'
   });
 
-  // Initialize OmniFocus service
+  // Initialize OmniFocus services
   const omnifocusService = new OmniFocusService();
+  
+  // Initialize the OmniFocus bridge for direct communication
+  // Fall back to mock service if the bridge fails
+  const omnifocusBridge = new OmniFocusBridge();
 
   // Register a simple health check tool to ensure the server is working
   server.tool(
@@ -56,6 +61,36 @@ export function createMcpServer(): McpServer {
           text: JSON.stringify(tasks, null, 2) 
         }]
       };
+    }
+  );
+  
+  // Get inbox tasks
+  server.tool(
+    'get_inbox_tasks',
+    { }, // No parameters needed
+    async () => {
+      logger.debug('Getting inbox tasks');
+      try {
+        // Try to get tasks from the actual OmniFocus application
+        const tasks = await omnifocusBridge.getInboxTasks();
+        return {
+          content: [{ 
+            type: 'text', 
+            text: JSON.stringify(tasks, null, 2) 
+          }]
+        };
+      } catch (error) {
+        logger.warn('Failed to get inbox tasks from OmniFocus directly, falling back to mock data:', error);
+        // Fall back to mock service
+        const tasks = await omnifocusService.getTasks();
+        const inboxTasks = tasks.filter(task => task.project === undefined);
+        return {
+          content: [{ 
+            type: 'text', 
+            text: JSON.stringify(inboxTasks, null, 2) 
+          }]
+        };
+      }
     }
   );
 
