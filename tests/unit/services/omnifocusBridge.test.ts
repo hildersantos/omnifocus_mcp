@@ -8,8 +8,8 @@ jest.mock('child_process', () => ({
   })
 }));
 
-// Spy on console.error
-const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+// Mock stderr.write
+const stderrWriteSpy = jest.spyOn(process.stderr, 'write').mockImplementation();
 
 describe('OmniFocusBridge', () => {
   let bridge: OmniFocusBridge;
@@ -20,7 +20,7 @@ describe('OmniFocusBridge', () => {
   });
   
   afterAll(() => {
-    consoleSpy.mockRestore();
+    stderrWriteSpy.mockRestore();
   });
   
   it('should create an instance of OmniFocusBridge', () => {
@@ -46,7 +46,7 @@ describe('OmniFocusBridge', () => {
       
       const script = 'console.log("Error test")';
       await expect(bridge.executeScript(script)).rejects.toThrow('Failed to execute script');
-      expect(consoleSpy).toHaveBeenCalled();
+      expect(stderrWriteSpy).toHaveBeenCalled();
     });
   });
   

@@ -20,16 +20,17 @@ export function createLogger(namespace: string): Logger {
   return {
     namespace,
     info: (message: string, ...args: any[]) => {
-      console.info(`[${namespace}] INFO: ${message}`, ...args);
+      // Write to stderr instead of stdout to avoid interfering with MCP JSON-RPC communication
+      process.stderr.write(`[${namespace}] INFO: ${message} ${args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ')}\n`);
     },
     error: (message: string, ...args: any[]) => {
-      console.error(`[${namespace}] ERROR: ${message}`, ...args);
+      process.stderr.write(`[${namespace}] ERROR: ${message} ${args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ')}\n`);
     },
     warn: (message: string, ...args: any[]) => {
-      console.warn(`[${namespace}] WARN: ${message}`, ...args);
+      process.stderr.write(`[${namespace}] WARN: ${message} ${args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ')}\n`);
     },
     debug: (message: string, ...args: any[]) => {
-      console.debug(`[${namespace}] DEBUG: ${message}`, ...args);
+      process.stderr.write(`[${namespace}] DEBUG: ${message} ${args.map(arg => typeof arg === 'object' ? JSON.stringify(arg) : arg).join(' ')}\n`);
     }
   };
 }
